@@ -1154,7 +1154,7 @@ type OffsetCommitReq struct {
 	ConsumerGroup     string
 	GroupGenerationID int32  // >= KafkaV1 only
 	MemberID          string // >= KafkaV1 only
-	RetentionTime     int64  // >= KafkaV2 only
+	RetentionTime     int64  // >= KafkaV2 && < KafkaV5 only
 	Topics            []OffsetCommitReqTopic
 }
 
@@ -1188,7 +1188,7 @@ func ReadOffsetCommitReq(r io.Reader) (*OffsetCommitReq, error) {
 		req.MemberID = dec.DecodeString()
 	}
 
-	if req.Version >= KafkaV2 {
+	if req.Version >= KafkaV2 && req.Version < KafkaV5 {
 		req.RetentionTime = dec.DecodeInt64()
 	}
 
